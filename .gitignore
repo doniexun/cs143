@@ -1,0 +1,11 @@
+*.d
+*.o
+.*.swp
+*.cc
+lexer
+semant
+parser
+mycoolc
+Makefile
+README
+cgen

@@ -72,8 +72,6 @@ TYPE_ID         {LOWER}+{UPPER}{DIGIT}*
   * Keywords are case-insensitive except for the values true and false,
   * which must begin with a lower-case letter.
   */
-class       { return (CLASS); }
-inherits    { return (INHERITS); }
 
  /*
   *  String constants (C syntax)
@@ -81,15 +79,28 @@ inherits    { return (INHERITS); }
   *  \n \t \b \f, the result is c.
   *
   */
-\(      { return ('('); }
-\)      { return (')'); }
 
-\{      { return ('{'); }
-\}      { return ('}'); }
+[ \t] ;
 
-\;      { return (';'); }
 
-[ \t]+  ;
-[\n]+   {curr_lineno++;}
+class       { return (CLASS); }
+inherits    {return (INHERITS); }
+
+\{          { return ('{'); }
+\}          { return ('}'); }
+\(          { return ('('); }
+\)          { return (')'); }
+;           { return (';'); }
+:           { return (':'); }
+
+[\n]        { curr_lineno++; }
+
+[A-Z][a-zA-Z0-9_]* { cool_yylval.symbol = inttable.add_string(yytext); return (TYPEID); }
+
+[a-z][a-zA-Z0-9_]* { cool_yylval.symbol = inttable.add_string(yytext); return (OBJECTID); }
+
+[a-zA-Z]?\"(\\.|[^\\"])*\" { cool_yylval.symbol = inttable.add_string(yytext); return (STR_CONST); }
+
+<<EOF>>   { return 0 ; } 
 
 %%
